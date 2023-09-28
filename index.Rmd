@@ -1,7 +1,7 @@
 ---
 title: "Gov 50 Final Project"
 author: "Ameera Rahman"
-description: "global health? maybe?"
+description: "description"
 output:
   distill::distill_article:
     self_contained: false
@@ -11,4 +11,4 @@ output:
 
 ## Project thoughts
 
-I am interested in exploring data related to...
+I am interested in exploring data related to some aspect of global health. I am taking a class on global health, and it is discussing a lot about the barriers to accessing healthcare and how that has been influenced by years of segregation and the history of colonization. I think it could be really interesting to do an analysis on a certain aspect of that. 
