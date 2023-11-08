@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1521,7 +1521,551 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>I am interested in exploring data related to some aspect of global health. I am taking a class on global health, and it is discussing a lot about the barriers to accessing healthcare and how that has been influenced by years of segregation and the history of colonization. I think it could be really interesting to do an analysis on a certain aspect of that.</p>
 <h2 id="project-proposal">Project proposal</h2>
 <p>How does transportational infrastructure impact accessing healthcare in 36 selected countries of Africa? This is a very multifaceted question that will be difficult to answer as there are quite a few variables to account for. Despite this, I hypothesize that barriers in transportation, such as lack of access to paid transport or road checkpoints or blockages, are associated with increased rates of people that have gone without medical treatment in the last 12 months, or have reported greater difficulty with accessing medical treatment. In impoverished areas, especially those that are impoverished due to colonial history that continues to benefit the white western world, healthcare clinics are often not accessible through walking distance, and rather requires transport. If this transport is not accessible due to one’s inability to pay for it, or for the lack of existence of the transportation in the first place, then one would be less likely to be able to access medical treatment. This also acknowledges the financial consequences of taking unpaid time off work to take the transportation to access medical treatment, if one is allowed to take time off work without the threat of no longer having the job when they come back, and/or having to find a source of childcare when seeking medical treatment. In other words, if transportation is inaccessible due to its lack of infrastructure or because the lack of infrastructure provides financial consequences when accessing medical treatment, then one would be less likely to access healthcare. The dataset used to measure the variables of interest is Afrobarometer’s Round 6 Survey in 2016. The explanatory variables of interest here are the report of whether there is a health clinic within walking distance, where yes = 1, no = 0, 9 = can’t determine and, -1 = missing, the report of whether there is a kind of paid transport within walking distance, where 0 = No, 1 = Yes, 9 = Can’t determine, and -1 = Missing, the report of whether there are roadblocks set up by the police or army, where 0 = No, 1 = Yes, 9 = Don’t know, and -1 = Missing, the report of whether there are any customs checkpoints, where 0 = No, 1 = Yes, 9 = Don’t Know, and -1 = Missing, the report of whether there are any roadblocks or booms set up by the local community, where 0 = No, 1 = Yes, 9 = Don’t Know, and -1 = Missing, and the report of whether a road was impassible due to something like a collapsed bridge, where 0 = No, 1 = Yes, 9 = Don’t Know, and -1 = Missing. My outcome variables are the report of how often someone in one’s family has gone without medical treatment in the last 12 months from the time they were surveyed, where 0 = Never, 1 = Just once or twice, 2 = Several times, 3 = Many times, 4 = Always, 9 = Don’t know, 98 = Refused to answer, and -1 = Missing, and the report of whether they had been in contact with a health clinic or hospital within the last 12 months from the time they were surveyed, and if so, how difficult was it to get contact with the hospital, where 1 = Very easy, 2 = Easy, 3 = Difficult, 4 = Very difficult, 7 = No contact (DNR), 9 = Don’t know, 98 = Refused to answer, and -1 = Missing. In order to provide support for my hypothesis, a low report of health clinics being within walking distance, a low report of whether is a kind of paid transport within walking distance, a high report of roadblocks set up by the police or army, a high report of whether there are customs checkpoints, a high report of whether there are roadblocks or booms set up by the local community, and/or a high report of impassible roads in the area is associated with a high report of at least one person in a family that has gone without medical treatment within the past 12 months since they were surveyed, a low report of people having had contact with a hospital or a health clinic within the last 12 months since they were surveyed, and/or a high report of people having had difficulty with having contact with a hospital or a health clinic within the past 12 months from the time they were surveyed. If there was any report of high rates of people going to a health clinic and/or with ease, associated with few reported transportation barriers, then my hypothesis will be disproven.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>afro_baro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/get.html'>get</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span><span class='st'>"/Users/ameerarahman/Downloads/afrobarometer2016.RData"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>afro_baro</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>   RESPNO COUNTRY COUNTRY_R5List COUNTRY.BY.REGION URBRUR REGION
+1 ALG0001       1              1                 4      2   1424
+2 ALG0002       1              1                 4      2   1424
+3 ALG0003       1              1                 4      2   1424
+4 ALG0004       1              1                 4      2   1424
+5 ALG0005       1              1                 4      2   1424
+6 ALG0006       1              1                 4      2   1424
+                                              LOCATION.LEVEL.1
+1 Jelfa                                                       
+2 Jelfa                                                       
+3 Jelfa                                                       
+4 Jelfa                                                       
+5 Jelfa                                                       
+6 Jelfa                                                       
+  EA_SVC_A EA_SVC_B EA_SVC_C EA_SVC_D EA_FAC_A EA_FAC_B EA_FAC_C
+1        0        0        0        1        0        1        1
+2        0        0        0        1        0        1        1
+3        0        0        0        1        0        1        1
+4        0        0        0        1        0        1        1
+5        0        0        0        1        0        1        1
+6        0        0        0        1        0        1        1
+  EA_FAC_D EA_FAC_E EA_FAC_F EA_FAC_G EA_SEC_A EA_SEC_B EA_SEC_C
+1        1        0        0        0        1        0        0
+2        1        0        0        0        1        0        0
+3        1        0        0        0        1        0        0
+4        1        0        0        0        1        0        0
+5        1        0        0        0        1        0        0
+6        1        0        0        0        1        0        0
+  EA_SEC_D EA_SEC_E EA_ROAD_A EA_ROAD_B NOCALL_1
+1        0        0         0         1        1
+2        0        0         0         1       NA
+3        0        0         0         1        6
+4        0        0         0         1       NA
+5        0        0         0         1        3
+6        0        0         0         1        4
+                                                 NOCALL_1OTHER
+1                                                             
+2                                                             
+3                                                             
+4                                                             
+5                                                             
+6                                                             
+  NOCALL_2
+1       NA
+2       NA
+3       NA
+4       NA
+5       NA
+6       NA
+                                                 NOCALL_2OTHER
+1                                                             
+2                                                             
+3                                                             
+4                                                             
+5                                                             
+6                                                             
+  NOCALL_3
+1       NA
+2       NA
+3       NA
+4       NA
+5       NA
+6       NA
+                                                 NOCALL_3OTHER
+1                                                             
+2                                                             
+3                                                             
+4                                                             
+5                                                             
+6                                                             
+  NOCALL_4
+1       NA
+2       NA
+3       NA
+4       NA
+5       NA
+6       NA
+                                                 NOCALL_4OTHER
+1                                                             
+2                                                             
+3                                                             
+4                                                             
+5                                                             
+6                                                             
+  NOCALL_5
+1       NA
+2       NA
+3       NA
+4       NA
+5       NA
+6       NA
+                                                 NOCALL_5OTHER
+1                                                             
+2                                                             
+3                                                             
+4                                                             
+5                                                             
+6                                                             
+  NOCALL_6 NOCALL_7 PREVINT THISINT ADULT_CT CALLS DATEINTR STRTIME
+1       NA       NA       2       1        9     2       NA      NA
+2       NA       NA       1       2        7     1       NA      NA
+3       NA       NA       2       1        7     2       NA      NA
+4       NA       NA       1       2        4     1       NA      NA
+5       NA       NA       2       1        8     2       NA      NA
+6       NA       NA       1       2        9     2       NA      NA
+  Q1   Q2
+1 27 1420
+2 30 1420
+3 62 1420
+4 30 1420
+5 35 1420
+6 21 1420
+                                                       Q2OTHER Q3 Q4A
+1                                                               2   4
+2                                                               2   3
+3                                                               2   4
+4                                                               2   4
+5                                                               2   4
+6                                                               1   4
+  Q4B Q5 Q6 Q7 Q8A Q8B Q8C Q8D Q8E Q8F Q9 Q10A Q10B Q11A Q11B Q12A
+1   4  4  9  9   0   2   0   0   0   3  0    0    0    0    0    3
+2   3  2  4  3   0   0   0   0   0   7  3    0    0    0    0    2
+3   3  3  3  4   0   0   0   0   0   7  4    0    0    0    0    3
+4   4  2  2  4   0   1   1   0   0   7  0    2    1    1    1    3
+5   3  2  3  3   0   1   1   0   1   7  1    1    0    0    1    4
+6   4  4  3  4   0   2   1   0   1   4  3    2    1    1    0    2
+  Q12B Q12C Q12D Q12E Q13 Q14 Q15A Q15B Q15C Q16 Q17 Q18 Q19A Q19B
+1    4    3    2    2   1   0    4    9    9   3   3   1    2    2
+2    4    1    0    0   1   1    3    3    3   1   1   1    0    0
+3    4    0    0    0   2   1    2    2    3   4   2   3    0    0
+4    4    3    4    0   2   1    3    3    4   3   2   3    0    1
+5    4    4    4    2   1   1    4    9    9   3   3   2    0    0
+6    4    3    4    4   2   1    3    3    4   3   1   3    0    1
+  Q20A Q20B Q21 Q22 Q23A Q23B Q23C Q23D Q24A Q24B Q24C Q24D Q24E Q24F
+1    3    2   6   4    0    0    1    0    2    1    0    0    2    3
+2    1    1   1   3    0    0    0    0    0    0    0    0    0    0
+3    3    4   1   3    0    0    0    0    0    0    0    0    0    0
+4    0    1   1   3    1    0    1    0    1    0    2    0    0    0
+5    2    2   1   3    0    0    0    0    0    0    0    0    0    2
+6    0    1   0   2    0    0    0    0    0    0    0    0    0    0
+  Q25A Q25B Q26A Q26B Q26C Q26D Q26E Q26F Q27A Q27B Q27C Q27D Q27E
+1    2    2    3    2    3    2    3   NA    1    1    1    0   NA
+2    7    7    3    3    3    3    3    3    0    0    0    0    0
+3    7    7    3    3    2    3    3    3    0    0    0    0    0
+4    2    1    3    2    3    2    3    2    1    2    1    0    0
+5    1    2    2    1    2    2    3   NA    0    1    0    0    0
+6    7    7    3    1    3    3    3    3    1    1    1    0   NA
+  Q28A Q28B Q28C Q28D_NAF Q29A
+1    4    3    3        3    2
+2    3    2    4        3    2
+3    2    2    2        4    3
+4    2    4    2        3    1
+5    3    2    3        9    1
+6    1    2    2        3    1
+                                                                                                                                                                                                                                                             Q29B
+1 Free and fair elections                                                                                                                                                                                                                                        
+2 Equality                                                                                                                                                                                                                                                       
+3                                                                                                                                                                                                                                                                
+4 Rule of the people                                                                                                                                                                                                                                             
+5 A sophisticated system                                                                                                                                                                                                                                         
+6 power is to the people                                                                                                                                                                                                                                         
+                                             Q29B0
+1                                                 
+2                                                 
+3                                                 
+4                                                 
+5                                                 
+6                                                 
+                                                                                                                                                                                                                                                             Q29C
+1                                                                                                                                                                                                                                                                
+2 freedom of expression                                                                                                                                                                                                                                          
+3                                                                                                                                                                                                                                                                
+4 freedom of expression                                                                                                                                                                                                                                          
+5 Sophisticated economic conditions                                                                                                                                                                                                                              
+6 mutual respect                                                                                                                                                                                                                                                 
+                                             Q29C0
+1                                                 
+2                                                 
+3                                                 
+4                                                 
+5                                                 
+6                                                 
+                                                                                                                                                                                                                                                             Q29D
+1                                                                                                                                                                                                                                                                
+2 Respect for people&#39;s rights                                                                                                                                                                                                                                    
+3                                                                                                                                                                                                                                                                
+4                                                                                                                                                                                                                                                                
+5                                                                                                                                                                                                                                                                
+6                                                                                                                                                                                                                                                                
+                                             Q29D0 Q29E Q29F Q29G Q30
+1                                                     3   NA   NA   1
+2                                                     6    1    1   3
+3                                                    NA   NA   NA   3
+4                                                     2    1   NA   3
+5                                                    12    5   NA   2
+6                                                     2   10   NA   3
+  Q31 Q32 Q33 Q34 Q35 Q36 Q37 Q38 Q39 Q39_NAF_A Q39_NAF_B Q39_NAF_C
+1   2   3   2   2   4   3   4   2   9         3         5         3
+2   1   2   1   2   2   2   4   4   4         3         3         2
+3   4   2   2   2   4   3   3   4   3         2         2         2
+4   3   1   3   1   2   2   2   3   2         4         4         4
+5   5   2   3   9   3   3   9   3   9         3         4         2
+6   1   1   3   2   5   3   5   3   2         9         4         4
+  Q39_NAF_D Q40 Q41 Q42A Q42B Q42C Q43 Q44 Q45A Q45B Q45C Q45D Q45E
+1         9  NA   9    9    4    3   2   2    9    9    9    9    9
+2         2   1   3    5    5    5   1   4    2    2    3    3    2
+3         2   2   3    2    2    2   4   3    0    0    1    1    0
+4         2   3   3    5    3    5   2   2    1    1    1    1    1
+5         3   2   3    4    3    3   2   2    1    1    9    1    9
+6         2   2   3    4    2    5   1   1    1    2    1    2    1
+  Q46 Q47A Q47B Q48A Q48B Q48C Q48D Q48E Q48F Q49 Q50 Q51A Q51B Q51C
+1   2    1    0    2    3    2    1    2    1   3   3    9    2    2
+2   1    0    0    0    0    0    0    0    0   2  NA    2    2    1
+3   2    0    1    0    2    0    0    0    0   3   2    1    2    2
+4   1    2    1    2    1    2    1    2   NA   1   4    2    1    2
+5   2   NA   NA    2   NA    2    1    2   NA   3   2    1    2    2
+6   0    1    1    2    1    2    1    2   NA   2   2    2    1    2
+  Q51D Q52A Q52B Q52C Q52D Q52E Q52F Q52G Q52H Q52I Q52J Q52K Q52L
+1    9    3    2    2    1    1    2   NA    2    3    2    3    3
+2    1    1    1    1    1    1    1    1    1    1    1    1    1
+3    1    1    1    1    2    2    1    2    2    2    2    2    1
+4    1    2    1    1    1    2    2    1    3    3    2    2    3
+5    9    2    0    2    2   NA    1    1    2    2    2    1    2
+6    1    2    1    1    1    1    1    1    2    2    2   NA    3
+  Q53A Q53B Q53C Q53D Q53E Q53F Q53G Q53H Q53I Q53J Q54 Q55A Q55B
+1   NA    1   NA    1    1    2    1    1    0    1   2    7    7
+2    2    2    2    2    2    2    2    2    2    2  NA    7    7
+3    1    1    2    2    1    2    2    1    1    1   5    1    0
+4    1    1    2    1    1    2    1    0    0    2   3    7    7
+5   NA    1    1    1    1    2    1   NA   NA    1   3    7    7
+6    1    1    1    1    1    2    1   NA    0    2   3    7    7
+  Q55C Q55D Q55E Q55F Q55G Q55H Q55I Q55J Q55K Q55L Q56 Q57A Q57B Q58
+1    3    0    3    0    4    0    7    7    7    7   7    7    7   7
+2    1    0    2    0    1    0    2    0    2    0   7    7    7   2
+3    1    0    1    0    1    0    7    7    7    7   7    7    7   3
+4    3    0    3    0    7    7    1    0    7    7   7    7    7  11
+5    2    0    1    0    7    7    2    0    7    7   7    7    7   4
+6    2    0    2    0    7    7    1    0    7    7   7    7    7   4
+                                                                                                                                                Q58OTHER
+1                                                                                                                                                       
+2                                                                                                                                                       
+3                                                                                                                                                       
+4                                                                                                                                                       
+5                                                                                                                                                       
+6                                                                                                                                                       
+  Q59A Q59B Q60PT1
+1    1    1      7
+2    1    1      8
+3    1    0      3
+4    1    1      3
+5    1    1     15
+6    9    9     11
+                                                                                 Q60PT1OTHER
+1                                                                                           
+2                                                                                           
+3                                                                                           
+4                                                                                           
+5                                                                                           
+6                                                                                           
+  Q60PT2
+1     11
+2      3
+3      7
+4     23
+5      3
+6     28
+                                                                                 Q60PT2OTHER
+1                                                                                           
+2                                                                                           
+3                                                                                           
+4                                                                                           
+5                                                                                           
+6                                                                                           
+  Q60PT3
+1      5
+2     22
+3     13
+4     15
+5      2
+6     NA
+                                                                                 Q60PT3OTHER
+1                                                                                           
+2                                                                                           
+3                                                                                           
+4                                                                                           
+5                                                                                           
+6                                                                                           
+  Q61A Q61B Q62 Q63A Q63B Q63C Q63D Q64 Q65A Q65B Q65C Q66A Q66B Q66C
+1    4   NA   3    9    1    9    9   3    5    2    2    9    3    9
+2    2    0   0    1    1    1    1   9    3    6    4    1    1    1
+3    3   NA   0    3    2    1    1   3    1    4    1    3    3    3
+4    3   NA   1    1    1    1    3   4    3    4    4    3    3    3
+5    4   NA  NA    3    1    1    3   3    2    4    6    9    3    3
+6    3   NA   0    1    1    1    2   4    2    1    4    3    3    3
+  Q66D Q66E Q66F Q66G Q66H Q66I Q66J Q66K Q66L Q66M Q67A Q67B Q68A
+1    2    9    3    2    9    2    3    9    3    9    2    2    3
+2    1    2    2    2    3    3    3    3    2    2    3    3    1
+3    3    3    3    3    3    3    3    3    2    3    2    3    1
+4    2    2    2    3    3    3    4    2    3    3    3    2    3
+5    2    2    3    3    2    3    3    2    3    9    3    3    3
+6    2    2    2    3    3    3    3    2    3    3    3    2    3
+  Q68B Q68C Q68D Q69A Q69B Q69C Q70A Q70B Q71A Q71B
+1    9    3    3    9    3    9    3    9    4    1
+2    1    1    1    3    1    3    2    2    1    5
+3    1    1    2    0    1    2    4    3    3    0
+4    3    3    9    0    3    3    3    7    4    1
+5    9    9    9    3    3    1    9    9    4    1
+6    3    3    9    2    1    1    9    7    5    2
+                                                                                                                                               Q71BOTHER
+1                                                                                                                                                       
+2                                                                                                                                                       
+3                                                                                                                                                       
+4                                                                                                                                                       
+5                                                                                                                                                       
+6                                                                                                                                                       
+  Q72 Q73A Q73B Q73C Q73D Q73E Q74A
+1   0    7    7    7    7    7   18
+2   0    7    7    7    7    7    8
+3   0    7    7    7    7    7   12
+4   0    7    7    7    7    7    9
+5   0    7    7    7    7    7    2
+6   1    7    7    7    7    7    5
+                                                                                                                                               Q74AOTHER
+1                                                                                                                                                       
+2                                                                                                                                                       
+3                                                                                                                                                       
+4                                                                                                                                                       
+5                                                                                                                                                       
+6                                                                                                                                                       
+  Q74B
+1    7
+2    3
+3   15
+4   NA
+5   11
+6    9
+                                                                                                                                               Q74BOTHER
+1                                                                                                                                                       
+2                                                                                                                                                       
+3                                                                                                                                                       
+4                                                                                                                                                       
+5                                                                                                                                                       
+6                                                                                                                                                       
+  Q75A Q75B Q76 Q77 Q78 Q79A Q79B Q80A
+1    2    2   2   9   7   NA   NA   NA
+2    3    3   1   4   3    3    3    3
+3    2    3   4   4   2    0    0    4
+4    2    3   2   3   2    2    1    2
+5    2    2   3   4   2   NA   NA    6
+6    2    3   3   3   7    0    0    5
+                                                                                   Q80AOTHER
+1                                                                                           
+2                                                                                           
+3                                                                                           
+4                                                                                           
+5                                                                                           
+6                                                                                           
+  Q80B Q81A Q81B Q81C Q81D Q81E Q82A_NAF Q82B_NAF Q83A_NAF Q83B_NAF
+1    1    9    9    9    5    9        4        3        3        9
+2    1    2    4    2    7    2        3        3        3        3
+3    3    2    2    5    3    7        3        4        2        3
+4    3    1    4    3    5    4        5        3        2        3
+5    1    9    3    5    9    4        3        2        3        3
+6    3    2    4    2    5    4        5        3        3        3
+  Q83C_NAF Q83D_NAF Q83E_NAF Q83F_NAF Q83G_NAF Q83H_NAF Q83I_NAF
+1        9        3        3        9        3        3        2
+2        3        3        3        3        3        3        4
+3        4        3        3        3        4        3        3
+4        2        3        3        3        3        2        3
+5        3        4        3        2        2        2        3
+6        2        3        3        4        3        2        3
+  Q84_NAF Q85A_NAF Q85B_NAF Q86A_NAF Q86B1_NAF
+1       2        3        3        2         4
+2       1        3        3        4         5
+3       4        3        4        1         5
+4       3        9        2        2         4
+5       3        2        2        4        13
+6       3        3        2        2         6
+                                                                                                                                         Q86B1_NAF_OTHER
+1                                                                                                                                                       
+2                                                                                                                                                       
+3                                                                                                                                                       
+4                                                                                                                                                       
+5                                                                                                                                                       
+6                                                                                                                                                       
+  Q86B2_NAF
+1        13
+2         9
+3        10
+4         8
+5        NA
+6        NA
+                                                                                                                                         Q86B2_NAF_OTHER
+1                                                                                                                                                       
+2                                                                                                                                                       
+3                                                                                                                                                       
+4                                                                                                                                                       
+5                                                                                                                                                       
+6                                                                                                                                                       
+   Q87                                                     Q87OTHER
+1 9990                                                             
+2    9                                                             
+3    9                                                             
+4 9990                                                             
+5 9990                                                             
+6 9990                                                             
+  Q88A Q88B Q89A Q89B Q89C Q89D Q89E Q90A Q90B
+1    7    7   99   99   99   99   99    0   NA
+2    0    2   99   99   99   99   99    0   NA
+3    0   NA   99   99   99   99   99    0   NA
+4    7    7   99   99   99   99   99    1 1427
+5    7    7   99   99   99   99   99    1 1421
+6    7    7   99   99   99   99   99    0   NA
+                                                                                   Q90BOTHER
+1                                                                                           
+2                                                                                           
+3                                                                                           
+4                                                                                           
+5                                                                                           
+6                                                                                           
+  Q91A Q91B Q91C Q91D Q92A Q92B Q93A Q93B Q94 Q95 Q96A Q96B Q97 Q98A
+1    1    1    0    1    3    2    1    1   4   3    5    1   2   18
+2    1    0    0    1    2    1    1    1   1   0    2    1   2   18
+3    0    1    0    1    3    0    1    1   5   0   10   NA   8   18
+4    1    1    0    1    4    4    1    1   4   3    8    2   5   19
+5    1    1    0    1    4    4   NA    1   5   3    9    4   4   18
+6    0    1    0    1    4    4    2    1   4   1    1    7   7   19
+                                                     Q98AOTHER Q98B
+1                                                                 2
+2                                                                 4
+3                                                                 4
+4                                                                 3
+5                                                                 2
+6                                                                 2
+   Q99                                                     Q99OTHER
+1 1420                                                             
+2   NA                                                             
+3   NA                                                             
+4 1427                                                             
+5 1421                                                             
+6   NA                                                             
+  Q100 ENDTIME LENGTH Q101 Q102
+1   NA      NA     51    1    4
+2    9      NA     49    2    4
+3   NA      NA     44    1    4
+4    6      NA     52    2    4
+5    7      NA     46    1    4
+6    4      NA     50    2    4
+                                      Q102OTHER Q103
+1                                                  5
+2                                                  5
+3                                                  5
+4                                                  5
+5                                                  5
+6                                                  5
+                                      Q103OTHER Q104 Q105 Q106 Q107A
+1                                                  5    1    3     0
+2                                                  2    2    4     0
+3                                                  7    2    1     0
+4                                                  7    2    4     0
+5                                                  7    2    4     0
+6                                                  7    2    4     1
+  Q107B Q107C Q107D Q107E Q108 Q110A Q110B Q110C Q110D Q110E Q110F
+1     0     0     0     0    0     2     2     2     2     2     2
+2     0     0     0     0    1     2     2     2     2     2     2
+3     0     0     0     0    0     1     1     1     1     1     2
+4     0     0     0     0    0     1     1     1     1     1     1
+5     0     0     0     0    0     1     1     1     1     1     1
+6     0     0     0     0    0     2     2     2     2     2     2
+   Q112 Q113 Q114 Q115 Q116
+1 ALG25   30    2    2    5
+2 ALG25   30    2    2    5
+3 ALG26   32    2    2    5
+4 ALG26   32    2    2    5
+5 ALG27   22    1    2    5
+6 ALG27   22    1    2    5
+                                      Q116OTHER Q116A1
+1                                                 1420
+2                                                 1420
+3                                                 1422
+4                                                 1422
+5                                                 1422
+6                                                 1422
+                                   Q116A1_OTHER Q117  withinwt
+1                                                  8 0.4763305
+2                                                  8 0.4763305
+3                                                  8 0.4763305
+4                                                  8 0.4763305
+5                                                  8 0.4763305
+6                                                  8 0.4763305
+   Combinwt AGE_COND EDUC_COND RELIG_COND R1.only R2.only R3.only
+1 0.4763305        2         1          2       0       0       0
+2 0.4763305        2         1          2       0       0       0
+3 0.4763305        5         3          2       0       0       0
+4 0.4763305        2         2          2       0       0       0
+5 0.4763305        2         2          2       0       0       0
+6 0.4763305        1         3          2       0       0       0
+  R4.only R5.only West.Africa.only East.Africa.only
+1       0       1                0                0
+2       0       1                0                0
+3       0       1                0                0
+4       0       1                0                0
+5       0       1                0                0
+6       0       1                0                0
+  Southern.Africa.only North.Africa.only Central.Africa.only
+1                    0                 1                   0
+2                    0                 1                   0
+3                    0                 1                   0
+4                    0                 1                   0
+5                    0                 1                   0
+6                    0                 1                   0</code></pre>
+</div>
+<h2 id="first-data-visualization">First data visualization</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
+<span><span class='va'>afro_baro</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span></span>
+<span>    no_med <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span><span class='op'>(</span></span>
+<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>~</span> <span class='fl'>0</span>,</span>
+<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>1</span> <span class='op'>~</span> <span class='fl'>1</span>,</span>
+<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>~</span> <span class='fl'>2</span>,</span>
+<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>3</span> <span class='op'>~</span> <span class='fl'>3</span>, </span>
+<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>4</span> <span class='op'>~</span> <span class='fl'>4</span>,</span>
+<span>    <span class='op'>)</span>,</span>
+<span>    is_health_clinic <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>EA_FAC_D</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span>, <span class='st'>"Yes"</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>clinic_vs_med</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>is_health_clinic</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span></span>
+<span>    mean_no_med <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>no_med</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>clinic_vs_med</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_health_clinic</span>, y <span class='op'>=</span> <span class='va'>mean_no_med</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span>binwidth <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Is there a Health Clinic?"</span>, y <span class='op'>=</span> <span class='st'>"Average Tendency of Going Without Medical Treatment"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
