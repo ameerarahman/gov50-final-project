@@ -18,14 +18,16 @@ I am interested in exploring data related to some aspect of global health. I am 
 How does transportational infrastructure impact accessing healthcare in 36 selected countries of Africa? This is a very multifaceted question that will be difficult to answer as there are quite a few variables to account for. Despite this, I hypothesize that barriers in transportation, such as lack of access to paid transport or road checkpoints or blockages, are associated with increased rates of people that have gone without medical treatment in the last 12 months, or have reported greater difficulty with accessing medical treatment. In impoverished areas, especially those that are impoverished due to colonial history that continues to benefit the white western world, healthcare clinics are often not accessible through walking distance, and rather requires transport. If this transport is not accessible due to one's inability to pay for it, or for the lack of existence of the transportation in the first place, then one would be less likely to be able to access medical treatment. This also acknowledges the financial consequences of taking unpaid time off work to take the transportation to access medical treatment, if one is allowed to take time off work without the threat of no longer having the job when they come back, and/or having to find a source of childcare when seeking medical treatment. In other words, if transportation is inaccessible due to its lack of infrastructure or because the lack of infrastructure provides financial consequences when accessing medical treatment, then one would be less likely to access healthcare. The dataset used to measure the variables of interest is Afrobarometer's Round 6 Survey in 2016. The explanatory variables of interest here are the report of whether there is a health clinic within walking distance, where yes = 1, no = 0, 9 = can't determine and, -1 = missing, the report of whether there is a kind of paid transport within walking distance, where 0 = No, 1 = Yes, 9 = Can’t determine, and -1 = Missing, the report of whether there are roadblocks set up by the police or army, where 0 = No, 1 = Yes, 9 = Don’t know, and -1 = Missing, the report of whether there are any customs checkpoints, where 0 = No, 1 = Yes, 9 = Don't Know, and -1 = Missing, the report of whether there are any roadblocks or booms set up by the local community, where 0 = No, 1 = Yes, 9 = Don't Know, and -1 = Missing, and the report of whether a road was impassible due to something like a collapsed bridge, where 0 = No, 1 = Yes, 9 = Don't Know, and -1 = Missing. My outcome variables are the report of how often someone in one's family has gone without medical treatment in the last 12 months from the time they were surveyed, where 0 = Never, 1 = Just once or twice, 2 = Several times, 3 = Many times, 4 = Always, 9 = Don’t know, 98 = Refused to answer, and -1 = Missing, and the report of whether they had been in contact with a health clinic or hospital within the last 12 months from the time they were surveyed, and if so, how difficult was it to get contact with the hospital, where 1 = Very easy, 2 = Easy, 3 = Difficult, 4 = Very difficult, 7 = No contact (DNR), 9 = Don’t know, 98 = Refused to answer, and -1 = Missing. In order to provide support for my hypothesis, a low report of health clinics being within walking distance, a low report of whether is a kind of paid transport within walking distance, a high report of roadblocks set up by the police or army, a high report of whether there are customs checkpoints, a high report of whether there are roadblocks or booms set up by the local community, and/or a high report of impassible roads in the area is associated with a high report of at least one person in a family that has gone without medical treatment within the past 12 months since they were surveyed, a low report of people having had contact with a hospital or a health clinic within the last 12 months since they were surveyed, and/or a high report of people having had difficulty with having contact with a hospital or a health clinic within the past 12 months from the time they were surveyed. If there was any report of high rates of people going to a health clinic and/or with ease, associated with few reported transportation barriers, then my hypothesis will be disproven. 
 
 ```{r}
+library(tidyverse)
 afro_baro <- get(load("/Users/ameerarahman/Downloads/afrobarometer2016.RData"))
+afro_baro <- afro_baro |>
+  select(EA_FAC_D, EA_FAC_G, EA_FAC_F, EA_SEC_C, EA_ROAD_B, Q8A, Q8C, Q8E)
 head(afro_baro)
 ```
 
-## First data visualization
+## First data visualization & analysis
 
 ```{r}
-library(tidyverse)
 afro_baro <- afro_baro |>
   mutate(
     no_med = case_when(
@@ -42,9 +44,13 @@ clinic_vs_med <- afro_baro |>
   group_by(is_health_clinic) |>
   summarize(
     mean_no_med = mean(no_med, na.rm = TRUE)
-  )
+  ) 
+knitr::kable(clinic_vs_med, col.names = c("Is there a Health Clinic?", "Average Number of Times Gone Without Treatment"))
 
 clinic_vs_med |>
-  ggplot(mapping = aes(x = is_health_clinic, y = mean_no_med)) + geom_col(binwidth = 1) + labs(x = "Is there a Health Clinic?", y = "Average Tendency of Going Without Medical Treatment")
+  ggplot(mapping = aes(x = is_health_clinic, y = mean_no_med)) + geom_col(binwidth = 1) + labs(x = "Is there a Health Clinic Within Walking Distance?", y = "Average Tendency of Going Without Medical Treatment")
 ```
+
+When analyzing the difference between the average number of times that someone or their family member has gone without treatment based on the existence of a health clinic nearby, the results suggest that the existence of a health clinic nearby affects the ability to acquire medical treatment. When there has been a health clinic or hospital nearby, the average number of times someone or their family member has gone without medical treatment is 0.9486404. However, when there has not been a health clinic or hospital within walking distance, the average number of times someone or their family member has gone without medical treatment tends to increase to 1.1455005. 
+
 
