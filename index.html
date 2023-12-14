@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-11-1.png","index_files/figure-html5/unnamed-chunk-12-1.png","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/figure-html5/unnamed-chunk-3-2.png","index_files/figure-html5/unnamed-chunk-4-1.png","index_files/figure-html5/unnamed-chunk-5-1.png","index_files/figure-html5/unnamed-chunk-6-1.png","index_files/figure-html5/unnamed-chunk-7-1.png","index_files/figure-html5/unnamed-chunk-8-1.png","index_files/figure-html5/unnamed-chunk-8-2.png","index_files/figure-html5/unnamed-chunk-8-3.png","index_files/figure-html5/unnamed-chunk-8-4.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -227,9 +227,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     display: none !important;
   }
 
+  hr.section-separator {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0px;
+  }
+
+
+  d-byline {
+    border-top: none;
+  }
+
   d-article {
     padding-top: 2.5rem;
     padding-bottom: 30px;
+    border-top: none;
   }
 
   d-appendix {
@@ -324,6 +336,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article div.sourceCode pre {
     padding-left: 18px;
     font-size: 14px;
+  }
+
+  /* tweak for Pandoc numbered line within distill */
+  d-article pre.numberSource code > span {
+      left: -2em;
   }
 
   d-article pre {
@@ -1085,6 +1102,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // create d-title
     $('.d-title').changeElementType('d-title');
 
+    // separator
+    var separator = '<hr class="section-separator" style="clear: both"/>';
+    // prepend separator above appendix
+    $('.d-byline').before(separator);
+    $('.d-article').before(separator);
+
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
@@ -1162,8 +1185,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     $('.distill-force-highlighting-css').parent().remove();
 
     // remove empty line numbers inserted by pandoc when using a
-    // custom syntax highlighting theme
-    $('code.sourceCode a:empty').remove();
+    // custom syntax highlighting theme, except when numbering line
+    // in code chunk
+    $('pre:not(.numberLines) code.sourceCode a:empty').remove();
 
     // load distill framework
     load_distill_framework();
@@ -1189,12 +1213,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
+        var author_name = front_matter.authors[i].author
         if (orcid_id) {
           var a = $('<a></a>');
           a.attr('href', 'https://orcid.org/' + orcid_id);
           var img = $('<img></img>');
           img.addClass('orcid-id');
-          img.attr('alt', 'ORCID ID');
+          img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
           img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
           a.append(img);
           $(this).append(a);
@@ -1472,7 +1497,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="index_files/header-attrs-2.24/header-attrs.js"></script>
+  <script src="index_files/header-attrs-2.25/header-attrs.js"></script>
+  <script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+  <link href="index_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
   <script src="index_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
   <script src="index_files/popper-2.6.0/popper.min.js"></script>
   <link href="index_files/tippy-6.2.7/tippy.css" rel="stylesheet" />
@@ -1504,6 +1531,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <div class="d-title">
 <h1>Gov 50 Final Project</h1>
+
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 <p>description</p>
@@ -1517,47 +1545,190 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 
 <div class="d-article">
-<h2 id="project-thoughts">Project thoughts</h2>
-<p>I am interested in exploring data related to some aspect of global health. I am taking a class on global health, and it is discussing a lot about the barriers to accessing healthcare and how that has been influenced by years of segregation and the history of colonization. I think it could be really interesting to do an analysis on a certain aspect of that.</p>
-<h2 id="project-proposal">Project proposal</h2>
-<p>How does transportational infrastructure impact accessing healthcare in 36 selected countries of Africa? This is a very multifaceted question that will be difficult to answer as there are quite a few variables to account for. Despite this, I hypothesize that barriers in transportation, such as lack of access to paid transport or road checkpoints or blockages, are associated with increased rates of people that have gone without medical treatment in the last 12 months, or have reported greater difficulty with accessing medical treatment. In impoverished areas, especially those that are impoverished due to colonial history that continues to benefit the white western world, healthcare clinics are often not accessible through walking distance, and rather requires transport. If this transport is not accessible due to one’s inability to pay for it, or for the lack of existence of the transportation in the first place, then one would be less likely to be able to access medical treatment. This also acknowledges the financial consequences of taking unpaid time off work to take the transportation to access medical treatment, if one is allowed to take time off work without the threat of no longer having the job when they come back, and/or having to find a source of childcare when seeking medical treatment. In other words, if transportation is inaccessible due to its lack of infrastructure or because the lack of infrastructure provides financial consequences when accessing medical treatment, then one would be less likely to access healthcare. The dataset used to measure the variables of interest is Afrobarometer’s Round 6 Survey in 2016. The explanatory variables of interest here are the report of whether there is a health clinic within walking distance, where yes = 1, no = 0, 9 = can’t determine and, -1 = missing, the report of whether there is a kind of paid transport within walking distance, where 0 = No, 1 = Yes, 9 = Can’t determine, and -1 = Missing, the report of whether there are roadblocks set up by the police or army, where 0 = No, 1 = Yes, 9 = Don’t know, and -1 = Missing, the report of whether there are any customs checkpoints, where 0 = No, 1 = Yes, 9 = Don’t Know, and -1 = Missing, the report of whether there are any roadblocks or booms set up by the local community, where 0 = No, 1 = Yes, 9 = Don’t Know, and -1 = Missing, and the report of whether a road was impassible due to something like a collapsed bridge, where 0 = No, 1 = Yes, 9 = Don’t Know, and -1 = Missing. My outcome variables are the report of how often someone in one’s family has gone without medical treatment in the last 12 months from the time they were surveyed, where 0 = Never, 1 = Just once or twice, 2 = Several times, 3 = Many times, 4 = Always, 9 = Don’t know, 98 = Refused to answer, and -1 = Missing, and the report of whether they had been in contact with a health clinic or hospital within the last 12 months from the time they were surveyed, and if so, how difficult was it to get contact with the hospital, where 1 = Very easy, 2 = Easy, 3 = Difficult, 4 = Very difficult, 7 = No contact (DNR), 9 = Don’t know, 98 = Refused to answer, and -1 = Missing. In order to provide support for my hypothesis, a low report of health clinics being within walking distance, a low report of whether is a kind of paid transport within walking distance, a high report of roadblocks set up by the police or army, a high report of whether there are customs checkpoints, a high report of whether there are roadblocks or booms set up by the local community, and/or a high report of impassible roads in the area is associated with a high report of at least one person in a family that has gone without medical treatment within the past 12 months since they were surveyed, a low report of people having had contact with a hospital or a health clinic within the last 12 months since they were surveyed, and/or a high report of people having had difficulty with having contact with a hospital or a health clinic within the past 12 months from the time they were surveyed. If there was any report of high rates of people going to a health clinic and/or with ease, associated with few reported transportation barriers, then my hypothesis will be disproven.</p>
+<h2 id="introduction">Introduction</h2>
+<p>This semester, I took a class on global health, and it discussed a lot about the barriers to accessing healthcare, and how these barriers have often been influenced by years of segregation and the history of colonization. I thought it could be really interesting to do an analysis on a certain aspect of that. The research question I came down to was inspired by a lecture by Dr. Jason Silverstein about racial health disparities in the United States as a result of segregation and deprivation, and how some of the current barriers to healthcare right now is caused by a lack of hospitals and clinics in people’s neighborhoods, especially neighborhoods with a population that is majority people of color, and difficulties with transportation in getting to neighborhoods that have hospitals or clinics where people can get the medical treatment they need. I wanted to explore this phenomenon in the context of countries that experienced long periods of colonization and have since gained their independence.</p>
+<h2 id="research-question-hypothesis">Research Question &amp; Hypothesis</h2>
+<p>How does transportational infrastructure impact accessing healthcare in 36 selected countries of Africa? This is a very multifaceted question that will be difficult to answer as there are quite a few variables to account for. Despite this, I hypothesize that barriers in transportation, such as lack of access to paid transport or road checkpoints or blockages, are associated with increased rates of people that have gone without medical treatment in the last 12 months, or have reported greater difficulty with accessing medical treatment. In impoverished areas, especially those that are impoverished due to colonial history that continues to benefit the white western world, healthcare clinics are often not accessible through walking distance, and rather requires transport. If this transport is not accessible due to one’s inability to pay for it, or for the lack of existence of the transportation in the first place, then one would be less likely to be able to access medical treatment. This also acknowledges the financial consequences of taking unpaid time off work to take the transportation to access medical treatment, if one is allowed to take time off work without the threat of no longer having the job when they come back, and/or having to find a source of childcare when seeking medical treatment. In other words, if transportation is inaccessible due to its lack of infrastructure or because the lack of infrastructure provides financial consequences when accessing medical treatment, then one would be less likely to access healthcare.</p>
+<h2 id="the-data">The Data</h2>
+<p>The dataset used to measure the variables of interest is Afrobarometer’s Merged Round 6 Survey in 2016. This dataset merged data obtained from 36 countries, which are Algeria, Benin, Botswana, Burkina Faso, Burundi, Cameroon, Cape Verde, Cote d’Ivoire (Ivory Coast), Egypt, Gabon, Ghana, Guinea, Kenya, Lesotho, Liberia, Madagascar, Malawi, Mali, Mauritius, Morocco, Mozambique, Namibia, Niger,
+Nigeria, São Tomé and Príncipe, Senegal, Sierra Leone, South Africa, Sudan, Swaziland (Eswatini), Tanzania, Togo, Tunisia, Uganda, Zambia, and Zimbabwe. I acknowledge that each country’s history of colonization is immensely different, especially since this dataset includes different regions of Africa, which can mean different things for the state of each region’s, let alone each country’s, healthcare system. However, in keeping the entire dataset together, I could do future analysis on the differences between each country or each region and contextualize the reasons for that. For now, this will be an overarching analysis.</p>
+<h2 id="explanatory-variables-of-interest">Explanatory Variables of Interest</h2>
+<p>The main explanatory variables of interest here are the report of whether there is a health clinic within walking distance, where yes = 1, no = 0, 9 = can’t determine and, -1 = missing (EA_FAC_D), and the report of whether there is a kind of paid transport within walking distance and on a daily basis, where 0 = No, 1 = Yes, 9 = Can’t determine, and -1 = Missing (EA_FAC_G).</p>
+<p>Some additional explanatory variables I wanted to look at were the report of whether there are roadblocks set up by the police or army, where 0 = No, 1 = Yes, 9 = Don’t know, and -1 = Missing (EA_SEC_C), the report of whether there are any customs checkpoints, where 0 = No, 1 = Yes, 9 = Don’t Know, and -1 = Missing (EA_SEC_D), the report of whether there are any roadblocks or booms set up by the local community, where 0 = No, 1 = Yes, 9 = Don’t Know, and -1 = Missing (EA_SEC_E), and the report of whether a road was impassible due to something like a collapsed bridge, where 0 = No, 1 = Yes, 9 = Don’t Know, and -1 = Missing (EA_ROAD_B).</p>
+<h2 id="outcome-variables-of-interest">Outcome Variables of Interest</h2>
+<p>My main outcome variable is the report of how often someone in one’s family has gone without medical treatment in the last 12 months from the time they were surveyed, where 0 = Never, 1 = Just once or twice, 2 = Several times, 3 = Many times, 4 = Always, 9 = Don’t know, 98 = Refused to answer, and -1 = Missing (Q8C).</p>
+<p>I also wanted to take a brief look at the report of whether they had been in contact with a health clinic or hospital within the last 12 months from the time they were surveyed, and if so, how difficult was it to get contact with the hospital, where 1 = Very easy, 2 = Easy, 3 = Difficult, 4 = Very difficult, 7 = No contact (DNR), 9 = Don’t know, 98 = Refused to answer, and -1 = Missing (Q55C).</p>
+<h2 id="what-the-explanatory-variables-mean-to-my-research">What the Explanatory Variables Mean to My Research</h2>
+<p>In order to provide support for my hypothesis, a low report of health clinics being within walking distance, a low report of whether is a kind of paid transport within walking distance, a high report of roadblocks set up by the police or army, a high report of whether there are customs checkpoints, a high report of whether there are roadblocks or booms set up by the local community, and/or a high report of impassible roads in the area is associated with a high report of at least one person in a family that has gone without medical treatment within the past 12 months since they were surveyed, a low report of people having had contact with a hospital or a health clinic within the last 12 months since they were surveyed, and/or a high report of people having had difficulty with having contact with a hospital or a health clinic within the past 12 months from the time they were surveyed.</p>
+<p>If there was any report of high rates of people going to a health clinic and/or with ease, associated with few reported transportation barriers, then my hypothesis will be disproven.</p>
+<h2 id="confounding-variables">Confounding Variables?</h2>
+<p>In terms of confounding variables, if the respondents or one or more people in their families go without a cash income, then they will not be able to pay for medical treatment in the first place. Due to this, the confounding variables here are whether the respondent or someone in their family has gone without a cash income, and if so, how many times, where 0 = Never, 1 = Just once or twice, 2 = Several times, 3 = Many times, 4 = Always, 9 = Don’t know, 98 = Refused to answer, and -1 = Missing (Q8E), and if the respondent has a job that pays a cash income and if they are looking for a job, where 0 = No job and Not looking for a job, 1 = No and Looking for a job, 2 = Yes, part-time job, 3 = Yes, full-time job, 9 = Don’t know, 98 = Refused to answer, and -1 = Missing (Q95).</p>
+<h2 id="loading-and-selecting-variables-of-interest">Loading and Selecting Variables of Interest</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
 <span><span class='va'>afro_baro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/get.html'>get</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span><span class='st'>"/Users/ameerarahman/Downloads/afrobarometer2016.RData"</span><span class='op'>)</span><span class='op'>)</span></span>
 <span><span class='va'>afro_baro</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>EA_FAC_D</span>, <span class='va'>EA_FAC_G</span>, <span class='va'>EA_FAC_F</span>, <span class='va'>EA_SEC_C</span>, <span class='va'>EA_ROAD_B</span>, <span class='va'>Q8A</span>, <span class='va'>Q8C</span>, <span class='va'>Q8E</span><span class='op'>)</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>EA_FAC_D</span>, <span class='va'>EA_FAC_G</span>, <span class='va'>EA_SEC_C</span>, <span class='va'>EA_SEC_D</span>, <span class='va'>EA_SEC_E</span>, <span class='va'>EA_ROAD_B</span>, <span class='va'>Q8C</span>, <span class='va'>Q8E</span>, <span class='va'>Q55C</span>, <span class='va'>Q95</span><span class='op'>)</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>afro_baro</span><span class='op'>)</span></span></code></pre>
 </div>
-<pre><code>  EA_FAC_D EA_FAC_G EA_FAC_F EA_SEC_C EA_ROAD_B Q8A Q8C Q8E
-1        1        0        0        0         1   0   0   0
-2        1        0        0        0         1   0   0   0
-3        1        0        0        0         1   0   0   0
-4        1        0        0        0         1   0   1   0
-5        1        0        0        0         1   0   1   1
-6        1        0        0        0         1   0   1   1</code></pre>
+<pre><code>  EA_FAC_D EA_FAC_G EA_SEC_C EA_SEC_D EA_SEC_E EA_ROAD_B Q8C Q8E Q55C
+1        1        0        0        0        0         1   0   0    3
+2        1        0        0        0        0         1   0   0    1
+3        1        0        0        0        0         1   0   0    1
+4        1        0        0        0        0         1   1   0    3
+5        1        0        0        0        0         1   1   1    2
+6        1        0        0        0        0         1   1   1    2
+  Q95
+1   3
+2   0
+3   0
+4   3
+5   3
+6   1</code></pre>
 </div>
-<h2 id="first-data-visualization-analysis">First data visualization &amp; analysis</h2>
+<h2 id="subsetting-andor-mutating-the-variables-to-include-factors-i-want">Subsetting and/or Mutating the Variables to Include Factors I Want</h2>
+<p>As most survey data does, this dataset includes a factor that accounts for respondents that do not or cannot respond, along with respondents who may not know the answer to the question provided. This is valuable and informative data in certain aspects, but for the purposes of this research, I am subsetting my variables of interest so that they only include the information I need. I will be mutating these variables with ones that will include non-numerical responses, where the variables will be renamed with more informative labels. These steps will make it so my code in each analysis section will not include the extra step of me creating a new variable if needed (and makes it so I don’t have to keep looking back at the codebook ;)).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>afro_baro</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span></span>
+<span>    <span class='op'>(</span><span class='va'>EA_FAC_D</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>EA_FAC_D</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>EA_FAC_G</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>EA_FAC_G</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>EA_SEC_C</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>EA_SEC_C</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>EA_SEC_D</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>EA_SEC_D</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>EA_SEC_E</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>EA_SEC_E</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>EA_ROAD_B</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>EA_ROAD_B</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>1</span> <span class='op'>|</span> <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>|</span> <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>3</span> <span class='op'>|</span> <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>4</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>Q8E</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>Q8E</span> <span class='op'>==</span> <span class='fl'>1</span> <span class='op'>|</span> <span class='va'>Q8E</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>|</span> <span class='va'>Q8E</span> <span class='op'>==</span> <span class='fl'>3</span> <span class='op'>|</span> <span class='va'>Q8E</span> <span class='op'>==</span> <span class='fl'>4</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>Q55C</span> <span class='op'>==</span> <span class='fl'>1</span> <span class='op'>|</span> <span class='va'>Q55C</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>|</span> <span class='va'>Q55C</span> <span class='op'>==</span> <span class='fl'>3</span> <span class='op'>|</span> <span class='va'>Q55C</span> <span class='op'>==</span> <span class='fl'>4</span><span class='op'>)</span> <span class='op'>&amp;</span> <span class='op'>(</span><span class='va'>Q95</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>Q95</span> <span class='op'>==</span> <span class='fl'>1</span> <span class='op'>|</span> <span class='va'>Q95</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>|</span> <span class='va'>Q95</span> <span class='op'>==</span> <span class='fl'>3</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span> <span class='op'>|&gt;</span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span></span>
-<span>    no_med <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span><span class='op'>(</span></span>
-<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>~</span> <span class='fl'>0</span>,</span>
-<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>1</span> <span class='op'>~</span> <span class='fl'>1</span>,</span>
-<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>~</span> <span class='fl'>2</span>,</span>
-<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>3</span> <span class='op'>~</span> <span class='fl'>3</span>, </span>
-<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>4</span> <span class='op'>~</span> <span class='fl'>4</span>,</span>
+<span>     is_health_clinic <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>EA_FAC_D</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span>, <span class='st'>"Yes"</span><span class='op'>)</span>,</span>
+<span>     is_transport <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>EA_FAC_G</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span>, <span class='st'>"Yes"</span><span class='op'>)</span>,</span>
+<span>     is_roadblock_pol_army <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>EA_SEC_C</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span>, <span class='st'>"Yes"</span><span class='op'>)</span>,</span>
+<span>     is_customs_check <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>EA_SEC_D</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span>, <span class='st'>"Yes"</span><span class='op'>)</span>,</span>
+<span>     is_roadblock_comm <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>EA_SEC_E</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span>, <span class='st'>"Yes"</span><span class='op'>)</span>,</span>
+<span>     is_road_impassible <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>EA_ROAD_B</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span>, <span class='st'>"Yes"</span><span class='op'>)</span>,</span>
+<span>    no_med_treatment <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span><span class='op'>(</span></span>
+<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>~</span> <span class='st'>"Never"</span>,</span>
+<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>1</span> <span class='op'>~</span> <span class='st'>"Just once or twice"</span>,</span>
+<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>~</span> <span class='st'>"Several times"</span>,</span>
+<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>3</span> <span class='op'>~</span> <span class='st'>"Many times"</span>, </span>
+<span>      <span class='va'>Q8C</span> <span class='op'>==</span> <span class='fl'>4</span> <span class='op'>~</span> <span class='st'>"Always"</span>,</span>
 <span>    <span class='op'>)</span>,</span>
-<span>    is_health_clinic <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>EA_FAC_D</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span>, <span class='st'>"Yes"</span><span class='op'>)</span></span>
-<span>  <span class='op'>)</span></span>
-<span></span>
-<span><span class='va'>clinic_vs_med</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>    no_cash_income <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span><span class='op'>(</span></span>
+<span>      <span class='va'>Q8E</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>~</span> <span class='st'>"Never"</span>,</span>
+<span>      <span class='va'>Q8E</span> <span class='op'>==</span> <span class='fl'>1</span> <span class='op'>~</span> <span class='st'>"Just once or twice"</span>,</span>
+<span>      <span class='va'>Q8E</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>~</span> <span class='st'>"Several times"</span>,</span>
+<span>      <span class='va'>Q8E</span> <span class='op'>==</span> <span class='fl'>3</span> <span class='op'>~</span> <span class='st'>"Many times"</span>, </span>
+<span>      <span class='va'>Q8E</span> <span class='op'>==</span> <span class='fl'>4</span> <span class='op'>~</span> <span class='st'>"Always"</span>,</span>
+<span>    <span class='op'>)</span>,</span>
+<span>    get_healthcare_ease <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span><span class='op'>(</span></span>
+<span>      <span class='va'>Q55C</span> <span class='op'>==</span> <span class='fl'>1</span> <span class='op'>~</span> <span class='st'>"Very easy"</span>,</span>
+<span>      <span class='va'>Q55C</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>~</span> <span class='st'>"Easy"</span>, </span>
+<span>      <span class='va'>Q55C</span> <span class='op'>==</span> <span class='fl'>3</span> <span class='op'>~</span> <span class='st'>"Difficult"</span>,</span>
+<span>      <span class='va'>Q55C</span> <span class='op'>==</span> <span class='fl'>4</span> <span class='op'>~</span> <span class='st'>"Very difficult"</span></span>
+<span>    <span class='op'>)</span>,</span>
+<span>    have_job <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span><span class='op'>(</span></span>
+<span>      <span class='va'>Q95</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>~</span> <span class='st'>"No (not looking)"</span>,</span>
+<span>      <span class='va'>Q95</span> <span class='op'>==</span> <span class='fl'>1</span> <span class='op'>~</span> <span class='st'>"No (looking)"</span>,</span>
+<span>      <span class='va'>Q95</span> <span class='op'>==</span> <span class='fl'>2</span> <span class='op'>~</span> <span class='st'>"Yes, part time"</span>, </span>
+<span>      <span class='va'>Q95</span> <span class='op'>==</span> <span class='fl'>3</span> <span class='op'>~</span> <span class='st'>"Yes, full time"</span></span>
+<span>    <span class='op'>)</span></span>
+<span>  <span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<h2 id="summary-plots-of-the-dependent-variables">Summary Plots of the Dependent Variables</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>no_med_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>afro_baro</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://forcats.tidyverse.org/reference/fct_reorder.html'>fct_reorder</a></span><span class='op'>(</span><span class='va'>no_med_treatment</span>, <span class='va'>Q8C</span><span class='op'>)</span>, fill <span class='op'>=</span> <span class='va'>no_med_treatment</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_bar</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Amount of Times Going Without Medical Treatment"</span>, y <span class='op'>=</span> <span class='st'>"Count"</span>, title <span class='op'>=</span> <span class='st'>"Number of Respondents and the Amount of Times They Went Without Medical Treatment"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>plot.title <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>, legend.position <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span></span>
+<span><span class='va'>no_med_plot</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-3-1.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>get_healthcare_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>afro_baro</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://forcats.tidyverse.org/reference/fct_reorder.html'>fct_reorder</a></span><span class='op'>(</span><span class='va'>get_healthcare_ease</span>, <span class='va'>Q55C</span><span class='op'>)</span>, fill <span class='op'>=</span> <span class='va'>get_healthcare_ease</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_bar</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Ease of Getting Healthcare"</span>, y <span class='op'>=</span> <span class='st'>"Count"</span>, title <span class='op'>=</span> <span class='st'>"Number of Respondents and Their Reported Ease of Getting Healthcare"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>plot.title <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>, legend.position <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span></span>
+<span><span class='va'>get_healthcare_plot</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-3-2.png" width="624" /></p>
+</div>
+<p>The dependent variables here are, one, the amount of times that a respondent or a respondent’s family member went without medical treatment, and two, how difficult it was to get healthcare, if a respondent had contact with a public clinic or hospital.</p>
+<p>Based on the missing medical treatment plot, most of the respondents never went without medical treatment, and among the ones that had to at any point, the majority only went without medical treatment several times.</p>
+<p>Based on the getting healthcare plot, the majority felt it was easy to obtain healthcare.</p>
+<h2 id="analysis-of-average-treatment-effect-of-not-having-a-health-clinic-within-walking-distance-on-the-average-tendency-of-going-without-medical-treatment-visualization">Analysis of Average Treatment Effect of Not Having a Health Clinic Within Walking Distance on the Average Tendency of Going Without Medical Treatment &amp; Visualization</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>clinic_vs_med</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>is_health_clinic</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span></span>
-<span>    mean_no_med <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>no_med</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>    mean_no_med_treatment <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q8C</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
 <span>  <span class='op'>)</span> </span>
-<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>clinic_vs_med</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Is there a Health Clinic?"</span>, <span class='st'>"Average Number of Times Gone Without Treatment"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>clinic_vs_med</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Is there a Health Clinic?"</span>, <span class='st'>"Average Tendency of Going Without Treatment"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Is there a Health Clinic?</th>
+<th style="text-align: right;">Average Tendency of Going Without Treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">1.1690897</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">0.9767779</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>clinic_vs_med_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>clinic_vs_med</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_health_clinic</span>, y <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span>, fill <span class='op'>=</span> <span class='va'>is_health_clinic</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Is there a Health Clinic Within Walking Distance?"</span>, y <span class='op'>=</span> <span class='st'>"Average Tendency of Going Without Medical Treatment"</span><span class='op'>)</span></span>
+<span><span class='va'>clinic_vs_med_plot</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-4-1.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>clinic_vs_med_ate</span> <span class='op'>&lt;-</span> <span class='va'>clinic_vs_med</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>is_health_clinic</span>, values_from <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ATE <span class='op'>=</span> <span class='va'>`No`</span> <span class='op'>-</span> <span class='va'>`Yes`</span><span class='op'>)</span></span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>clinic_vs_med_ate</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"No, there is no health clinic within walking distance"</span>, <span class='st'>"Yes, there is a health clinic within walking distance"</span>, <span class='st'>"Average Treatment Effect"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 40%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">No, there is no health clinic within walking distance</th>
+<th style="text-align: right;">Yes, there is a health clinic within walking distance</th>
+<th style="text-align: right;">Average Treatment Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.16909</td>
+<td style="text-align: right;">0.9767779</td>
+<td style="text-align: right;">0.1923118</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This is the main analysis I wanted to focus on. When analyzing the difference between the average tendency that someone or their family member has gone without treatment based on the existence of a health clinic nearby, along with the visualization of these differences, the results suggest that the existence of a health clinic nearby affects the ability to acquire medical treatment. When there has been a health clinic or hospital nearby, the average tendency someone or their family member has gone without medical treatment is 0.9486404. However, when there has not been a health clinic or hospital within walking distance, the average tendency that someone or their family member has gone without medical treatment tends to increase to 1.1455005. I refer to the “missingness” as “tendency” instead of “number of times” because missingness is grouped in broad categories like “many times,” and it is thus harder to determine the exact number of times someone has gone without healthcare treatment.</p>
+<p>Because this analysis is done in negatives, in that I am assessing how not having a clinic within walking distances affects how much someone does not get medical treatment, my treated group refers to those that do not have a health clinic or hospital within walking distance (it’s a bit complicated, I know). Due to this, the average treatment effect is 0.1923118, which means that a lack of a health clinic or hospital within walking distance is associated with an increase in missing medical treatment by 0.1923118.</p>
+<h2 id="analysis-of-average-treatment-effect-of-not-having-a-health-clinic-within-walking-distance-on-the-average-rating-of-the-ease-of-getting-healthcare-visualization">Analysis of Average Treatment Effect of Not Having a Health Clinic Within Walking Distance on the Average Rating of the Ease of Getting Healthcare &amp; Visualization</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>clinic_vs_ease</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>is_health_clinic</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span></span>
+<span>    mean_get_treatment_ease <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q55C</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span> </span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>clinic_vs_med</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Is there a Health Clinic?"</span>, <span class='st'>"Average Rating of the Ease of Getting Treatment"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <table>
 <colgroup>
@@ -1567,27 +1738,814 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <thead>
 <tr class="header">
 <th style="text-align: left;">Is there a Health Clinic?</th>
-<th style="text-align: right;">Average Number of Times Gone Without Treatment</th>
+<th style="text-align: right;">Average Rating of the Ease of Getting Treatment</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">No</td>
-<td style="text-align: right;">1.1455005</td>
+<td style="text-align: right;">1.1690897</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Yes</td>
-<td style="text-align: right;">0.9486404</td>
+<td style="text-align: right;">0.9767779</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>clinic_vs_med</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_health_clinic</span>, y <span class='op'>=</span> <span class='va'>mean_no_med</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span>binwidth <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Is there a Health Clinic Within Walking Distance?"</span>, y <span class='op'>=</span> <span class='st'>"Average Tendency of Going Without Medical Treatment"</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>clinic_vs_ease_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>clinic_vs_ease</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_health_clinic</span>, y <span class='op'>=</span> <span class='va'>mean_get_treatment_ease</span>, fill <span class='op'>=</span> <span class='va'>is_health_clinic</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Is there a Health Clinic Within Walking Distance?"</span>, y <span class='op'>=</span> <span class='st'>"Average Rating of the Ease of Getting Treatment"</span><span class='op'>)</span></span>
+<span><span class='va'>clinic_vs_med_plot</span></span></code></pre>
 </div>
-<p><img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
+<img src="index_files/figure-html5/unnamed-chunk-5-1.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>clinic_vs_ease_ate</span> <span class='op'>&lt;-</span> <span class='va'>clinic_vs_ease</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>is_health_clinic</span>, values_from <span class='op'>=</span> <span class='va'>mean_get_treatment_ease</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ATE <span class='op'>=</span> <span class='va'>`No`</span> <span class='op'>-</span> <span class='va'>`Yes`</span><span class='op'>)</span></span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>clinic_vs_ease_ate</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"No, there is no health clinic within walking distance"</span>, <span class='st'>"Yes, there is a health clinic within walking distance"</span>, <span class='st'>"Average Treatment Effect"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
-<p>When analyzing the difference between the average number of times that someone or their family member has gone without treatment based on the existence of a health clinic nearby, the results suggest that the existence of a health clinic nearby affects the ability to acquire medical treatment. When there has been a health clinic or hospital nearby, the average number of times someone or their family member has gone without medical treatment is 0.9486404. However, when there has not been a health clinic or hospital within walking distance, the average number of times someone or their family member has gone without medical treatment tends to increase to 1.1455005.</p>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 40%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">No, there is no health clinic within walking distance</th>
+<th style="text-align: right;">Yes, there is a health clinic within walking distance</th>
+<th style="text-align: right;">Average Treatment Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2.371207</td>
+<td style="text-align: right;">2.345097</td>
+<td style="text-align: right;">0.0261098</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This is another analysis I wanted to try. When analyzing the difference between the average rating on the ease of getting treatment based on the existence of a health clinic nearby, along with the visualization of these differences, the results suggest that the existence of a health clinic nearby affects the reported ease in acquiring medical treatment. When there has been a health clinic or hospital nearby, the average rating of ease in getting treatment is 2.345097. However, when there has not been a health clinic or hospital within walking distance, the average number of times someone or their family member has gone without medical treatment tends to increase to 2.371207. In this circumstance, a lower rating indicates an easier time in obtaining healthcare.</p>
+<p>Because this analysis is done in negatives, in that I am assessing how not having a clinic within walking distances affects how difficult it is to get treatment, my treated group refers to those that do not have a health clinic or hospital within walking distance. Due to this, the average treatment effect is 0.0261098, which means that a lack of a health clinic or hospital within walking distance is associated with an increase in the difficulty of obtaining medical treatment by 0.0261098. This average treatment effect is a bit lower, indicating that not having a healthcare clinic or hospital nearby has more of an effect on the number of times someone goes without treatment.</p>
+<h2 id="analysis-of-average-treatment-effect-of-not-having-paid-transport-within-walking-distance-on-the-average-tendency-of-going-without-medical-treatment-visualization">Analysis of Average Treatment Effect of Not Having Paid Transport within Walking Distance on the Average Tendency of Going Without Medical Treatment &amp; Visualization</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>transport_vs_med</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>is_transport</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span></span>
+<span>    mean_no_med_treatment <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q8C</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span> </span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>transport_vs_med</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Is there transport within walking distance?"</span>, <span class='st'>"Average Tendency of Going Without Treatment"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Is there transport within walking distance?</th>
+<th style="text-align: right;">Average Tendency of Going Without Treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">1.349408</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">0.993290</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>transport_vs_med_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>transport_vs_med</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_transport</span>, y <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span>, fill <span class='op'>=</span> <span class='va'>is_transport</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Is there transport within walking distance?"</span>, y <span class='op'>=</span> <span class='st'>"Average Tendency of Going Without Medical Treatment"</span><span class='op'>)</span></span>
+<span><span class='va'>transport_vs_med_plot</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-6-1.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>transport_vs_med_ate</span> <span class='op'>&lt;-</span> <span class='va'>transport_vs_med</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>is_transport</span>, values_from <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ATE <span class='op'>=</span> <span class='va'>`No`</span> <span class='op'>-</span> <span class='va'>`Yes`</span><span class='op'>)</span></span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>transport_vs_med_ate</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"No, there is no transport within walking distance"</span>, <span class='st'>"Yes, there is transport within walking distance"</span>, <span class='st'>"Average Treatment Effect"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 39%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">No, there is no transport within walking distance</th>
+<th style="text-align: right;">Yes, there is transport within walking distance</th>
+<th style="text-align: right;">Average Treatment Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.349408</td>
+<td style="text-align: right;">0.99329</td>
+<td style="text-align: right;">0.3561182</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This is another main analysis I wanted to assess. When analyzing the difference between the average tendency in going without medical treatment based on the existence of a transport nearby, along with the visualization of these differences, the results suggest that the existence of transport nearby affects the average tendency of someone going without medical treatment. When there has been transport nearby, the average tendency of going without treatment is 0.99329. However, when there has not been transport within walking distance, the average number of times someone or their family member has gone without medical treatment tends to increase to 1.349408.</p>
+<p>Because this analysis is done in negatives, in that I am assessing how not having transport within walking distances affects the average tendency of someone going without treatment, my treated group refers to those that do not have transport within walking distance. Due to this, the average treatment effect is 0.3561182, which means that a lack of transport within walking distance is associated with an increase in the average tendency of going without medical treatment by 0.3561182.</p>
+<h2 id="analysis-of-average-treatment-effect-of-not-having-paid-transport-within-walking-distance-on-the-average-rating-of-the-ease-of-getting-healthcare-visualization">Analysis of Average Treatment Effect of Not Having Paid Transport within Walking Distance on the Average Rating of the Ease of Getting Healthcare &amp; Visualization</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>transport_vs_ease</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>is_transport</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span></span>
+<span>    mean_get_treatment_ease <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q55C</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span> </span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>transport_vs_med</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Is there transport within walking distance?"</span>, <span class='st'>"Average Rating of Ease of Getting Treatment"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Is there transport within walking distance?</th>
+<th style="text-align: right;">Average Rating of Ease of Getting Treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">1.349408</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">0.993290</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>transport_vs_ease_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>transport_vs_ease</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_transport</span>, y <span class='op'>=</span> <span class='va'>mean_get_treatment_ease</span>, fill <span class='op'>=</span> <span class='va'>is_transport</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Is there transport within walking distance?"</span>, y <span class='op'>=</span> <span class='st'>"Average Rating of Ease of Getting Treatment"</span><span class='op'>)</span></span>
+<span><span class='va'>transport_vs_med_plot</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-7-1.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>transport_vs_ease_ate</span> <span class='op'>&lt;-</span> <span class='va'>transport_vs_ease</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>is_transport</span>, values_from <span class='op'>=</span> <span class='va'>mean_get_treatment_ease</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ATE <span class='op'>=</span> <span class='va'>`No`</span> <span class='op'>-</span> <span class='va'>`Yes`</span><span class='op'>)</span></span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>transport_vs_ease_ate</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"No, there is no transport within walking distance"</span>, <span class='st'>"Yes, there is transport within walking distance"</span>, <span class='st'>"Average Treatment Effect"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 39%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">No, there is no transport within walking distance</th>
+<th style="text-align: right;">Yes, there is transport within walking distance</th>
+<th style="text-align: right;">Average Treatment Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2.278926</td>
+<td style="text-align: right;">2.37056</td>
+<td style="text-align: right;">-0.0916344</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This is another analysis I wanted to try. When analyzing the difference between the average rating of getting healthcare treatment based on the existence of transport nearby, along with the visualization of these differences, the results suggest that the existence of transport nearby affects the average rating of the ease of getting treatment. When there has been transport nearby, the average rating of getting treatment is 2.37056. However, when there has not been transport within walking distance, the average rating of the ease in getting treatment tends to decrease to 2.278926. In this case, a lower rating indicates an easier time in getting treatment. This may indicate the existence of a confounding variable when it comes to assessing ease in getting treatment, as having transport nearby should theoretically make it easier to obtain treatment.</p>
+<p>Because this analysis is done in negatives, in that I am assessing how not having transport within walking distances affects the average rating of the ease in getting treatment, my treated group refers to those that do not have transport within walking distance. Due to this, the average treatment effect is -0.0916344, which means that a lack of transport within walking distance is associated with a decrease in difficulty of getting treatment by 0.0916344.</p>
+<h2 id="consolidated-analysis-of-average-treatment-effect-of-the-presence-of-roadblocks-placed-by-the-police-or-army-the-presence-of-customs-checkpoints-the-presence-of-roadblocks-or-booms-placed-by-the-community-and-the-presence-of-an-impassible-road-on-the-average-tendency-of-going-without-treatment">Consolidated: Analysis of Average Treatment Effect of the Presence of Roadblocks Placed by the Police or Army, the Presence of Customs Checkpoints, the Presence of Roadblocks or Booms Placed by the Community, and the Presence of an Impassible Road on the Average Tendency of Going Without Treatment</h2>
+<p>For the sake of focus (and saving space), the rest of this analysis will focus on the tendency of going without medical treatment, and will feature the rest of the explanatory variables in one section.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Average Treatment Effect of the Presence of Roadblocks Placed by the Police or Army</span></span>
+<span></span>
+<span><span class='va'>roadblock_pol_army_vs_med</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>is_roadblock_pol_army</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span></span>
+<span>    mean_no_med_treatment <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q8C</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span> </span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>roadblock_pol_army_vs_med</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Are there roadblocks set up by the police or army?"</span>, <span class='st'>"Average Tendency of Going Without Treatment"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Are there roadblocks set up by the police or army?</th>
+<th style="text-align: right;">Average Tendency of Going Without Treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">1.0667066</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">0.9459793</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>roadblock_pol_army_vs_med_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>roadblock_pol_army_vs_med</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_roadblock_pol_army</span>, y <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span>, fill <span class='op'>=</span> <span class='va'>is_roadblock_pol_army</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Are there roadblocks set up by the police or army?"</span>, y <span class='op'>=</span> <span class='st'>"Average Tendency of Going Without Medical Treatment"</span><span class='op'>)</span></span>
+<span><span class='va'>roadblock_pol_army_vs_med_plot</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-8-1.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>roadblock_pol_army_vs_med_ate</span> <span class='op'>&lt;-</span> <span class='va'>roadblock_pol_army_vs_med</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>is_roadblock_pol_army</span>, values_from <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ATE <span class='op'>=</span> <span class='va'>`No`</span> <span class='op'>-</span> <span class='va'>`Yes`</span><span class='op'>)</span></span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>roadblock_pol_army_vs_med_ate</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"No, there are no roadblocks set up by the police or army"</span>, <span class='st'>"Yes, there are roadblocks set up by the police or army"</span>, <span class='st'>"Average Treatment Effect"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 40%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">No, there are no roadblocks set up by the police or army</th>
+<th style="text-align: right;">Yes, there are roadblocks set up by the police or army</th>
+<th style="text-align: right;">Average Treatment Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.066707</td>
+<td style="text-align: right;">0.9459793</td>
+<td style="text-align: right;">0.1207273</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Average Treatment Effect of the Presence of Customs Checkpoints</span></span>
+<span></span>
+<span><span class='va'>customs_vs_med</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>is_customs_check</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span></span>
+<span>    mean_no_med_treatment <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q8C</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span> </span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>customs_vs_med</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Are there customs checkpoints?"</span>, <span class='st'>"Average Tendency of Going Without Treatment"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 58%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Are there customs checkpoints?</th>
+<th style="text-align: right;">Average Tendency of Going Without Treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">1.045068</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">1.210073</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>customs_vs_med_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>customs_vs_med</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_customs_check</span>, y <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span>, fill <span class='op'>=</span> <span class='va'>is_customs_check</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Are there customs checkpoints?"</span>, y <span class='op'>=</span> <span class='st'>"Average Tendency of Going Without Medical Treatment"</span><span class='op'>)</span></span>
+<span><span class='va'>customs_vs_med_plot</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-8-2.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>customs_vs_med_ate</span> <span class='op'>&lt;-</span> <span class='va'>customs_vs_med</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>is_customs_check</span>, values_from <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ATE <span class='op'>=</span> <span class='va'>`No`</span> <span class='op'>-</span> <span class='va'>`Yes`</span><span class='op'>)</span></span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>customs_vs_med_ate</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"No, there are no customs checkpoints"</span>, <span class='st'>"Yes, there are customs checkpoints"</span>, <span class='st'>"Average Treatment Effect"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 36%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">No, there are no customs checkpoints</th>
+<th style="text-align: right;">Yes, there are customs checkpoints</th>
+<th style="text-align: right;">Average Treatment Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.045068</td>
+<td style="text-align: right;">1.210073</td>
+<td style="text-align: right;">-0.1650044</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Average Treatment Effect of the Presence of Roadblocks or Booms Placed by the Community </span></span>
+<span></span>
+<span><span class='va'>roadblock_comms_vs_med</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>is_roadblock_comm</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span></span>
+<span>    mean_no_med_treatment <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q8C</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span> </span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>roadblock_comms_vs_med</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Are there roadblocks set up by the community?"</span>, <span class='st'>"Average Tendency of Going Without Treatment"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 51%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Are there roadblocks set up by the community?</th>
+<th style="text-align: right;">Average Tendency of Going Without Treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">1.048486</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">1.134503</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>roadblock_comms_vs_med_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>roadblock_comms_vs_med</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_roadblock_comm</span>, y <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span>, fill <span class='op'>=</span> <span class='va'>is_roadblock_comm</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Are there roadblocks set up by the community?"</span>, y <span class='op'>=</span> <span class='st'>"Average Tendency of Going Without Medical Treatment"</span><span class='op'>)</span></span>
+<span><span class='va'>roadblock_comms_vs_med_plot</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-8-3.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>roadblock_comms_vs_med_ate</span> <span class='op'>&lt;-</span> <span class='va'>roadblock_comms_vs_med</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>is_roadblock_comm</span>, values_from <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ATE <span class='op'>=</span> <span class='va'>`No`</span> <span class='op'>-</span> <span class='va'>`Yes`</span><span class='op'>)</span></span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>roadblock_comms_vs_med_ate</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"No, there are no roadblocks set up by the community"</span>, <span class='st'>"Yes, there are roadblocks set up by the community"</span>, <span class='st'>"Average Treatment Effect"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 39%" />
+<col style="width: 19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">No, there are no roadblocks set up by the community</th>
+<th style="text-align: right;">Yes, there are roadblocks set up by the community</th>
+<th style="text-align: right;">Average Treatment Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.048486</td>
+<td style="text-align: right;">1.134503</td>
+<td style="text-align: right;">-0.0860173</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Average Treatment Effect of the Presence of an Impassible Road </span></span>
+<span></span>
+<span><span class='va'>road_impassible_vs_med</span> <span class='op'>&lt;-</span> <span class='va'>afro_baro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>is_road_impassible</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span></span>
+<span>    mean_no_med_treatment <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q8C</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span> </span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>road_impassible_vs_med</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Are there impassible roads?"</span>, <span class='st'>"Average Tendency of Going Without Treatment"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Are there impassible roads?</th>
+<th style="text-align: right;">Average Tendency of Going Without Treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">No</td>
+<td style="text-align: right;">1.004177</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yes</td>
+<td style="text-align: right;">1.374887</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>road_impassible_vs_med_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>road_impassible_vs_med</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_road_impassible</span>, y <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span>, fill <span class='op'>=</span> <span class='va'>is_road_impassible</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_col</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Are there impassible roads?"</span>, y <span class='op'>=</span> <span class='st'>"Average Tendency of Going Without Medical Treatment"</span><span class='op'>)</span></span>
+<span><span class='va'>road_impassible_vs_med_plot</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-8-4.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>road_impassible_vs_med_ate</span> <span class='op'>&lt;-</span> <span class='va'>road_impassible_vs_med</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='va'>is_road_impassible</span>, values_from <span class='op'>=</span> <span class='va'>mean_no_med_treatment</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ATE <span class='op'>=</span> <span class='va'>`No`</span> <span class='op'>-</span> <span class='va'>`Yes`</span><span class='op'>)</span></span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>road_impassible_vs_med_ate</span>, col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"No, there are no impassible roads"</span>, <span class='st'>"Yes, there are impassible roads"</span>, <span class='st'>"Average Treatment Effect"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 35%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">No, there are no impassible roads</th>
+<th style="text-align: right;">Yes, there are impassible roads</th>
+<th style="text-align: right;">Average Treatment Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.004177</td>
+<td style="text-align: right;">1.374887</td>
+<td style="text-align: right;">-0.3707108</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>When analyzing the difference between the average tendency of going without medical treatment based on the roadblocks placed by the police or army, along with the visualization of these differences, the results suggest that the existence of roadblocks placed by the police or army nearby affects the average tendency of going without treatment. When there has been roadblocks placed by the police or army nearby, the average tendency of going without treatment is 0.9459793. However, when there has not been roadblocks placed by the police or army nearby, the average tendency of going without treatment increases to 1.066707, where the average treatment effect is 0.1207273, meaning that not having roadblocks placed by the police or army nearby increases the average tendency of going without medical treatment by 0.9459793. There is likely a confounding variable at play here.</p>
+<p>When analyzing the difference between the average tendency of going without medical treatment based on the presence of customs checkpoints, along with the visualization of these differences, the results suggest that the existence of customs checkpoints nearby affects the average tendency of going without treatment. When there has been customs checkpoints nearby, the average tendency of going without treatment is 1.210073. However, when there has not been customs checkpoints nearby, the average tendency of going without treatment increases to 1.045068, where the average treatment effect is -0.1650044, meaning that not having customs checkpoints nearby decreases the average tendency of going without medical treatment by -0.1650044.</p>
+<p>When analyzing the difference between the average tendency of going without medical treatment based on the presence of impassible roads, along with the visualization of these differences, the results suggest that the existence of impassible roads nearby affects the average tendency of going without treatment. When there has been impassible roads nearby, the average tendency of going without treatment is 1.134503. However, when there has not been roadblocks or booms placed by the police or army nearby, the average tendency of going without treatment increases to 1.048486, where the average treatment effect is -0.0860173, meaning that not having roadblocks or booms placed by the community nearby decreases the average tendency of going without medical treatment by 0.0860173.</p>
+<p>When analyzing the difference between the average tendency of going without medical treatment based on the roadblocks or booms placed by the community, along with the visualization of these differences, the results suggest that the existence of roadblocks or booms placed by the community nearby affects the average tendency of going without treatment. When there has been impassible roads nearby, the average tendency of going without treatment is 1.374887. However, when there has not been impassible roads nearby, the average tendency of going without treatment increases to 1.004177, where the average treatment effect is -0.3707108, meaning that not having roadblocks or booms placed by the community nearby decreases the average tendency of going without medical treatment by 0.3707108.</p>
+<h2 id="regression-of-the-main-variables-presence-of-transport-vs.-going-without-medical-treatment-and-presence-of-health-clinic-vs.-going-without-medical-treatment">Regression of the Main Variables (Presence of Transport vs. Going Without Medical Treatment and Presence of Health Clinic vs. Going Without Medical Treatment)</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>transport_vs_med_reg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>Q8C</span> <span class='op'>~</span> <span class='va'>EA_FAC_G</span>, data <span class='op'>=</span> <span class='va'>afro_baro</span><span class='op'>)</span></span>
+<span><span class='va'>clinic_vs_med_reg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>Q8C</span> <span class='op'>~</span> <span class='va'>EA_FAC_D</span>, data <span class='op'>=</span> <span class='va'>afro_baro</span><span class='op'>)</span></span>
+<span><span class='fu'>modelsummary</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/modelsummary/man/modelsummary.html'>modelsummary</a></span><span class='op'>(</span><span class='va'>transport_vs_med_reg</span>,</span>
+<span>                           statistic <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"s.e. = {std.error}"</span>,</span>
+<span>                                         <span class='st'>"p = {p.value}"</span><span class='op'>)</span>,</span>
+<span>                           gof_map <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"nobs"</span>, <span class='st'>"r.squared"</span>, <span class='st'>"adj.r.squared"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+ (1)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:center;">
+1.349
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+s.e. = 0.016
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+p = &lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EA_FAC_G
+</td>
+<td style="text-align:center;">
+−0.356
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+s.e. = 0.018
+</td>
+</tr>
+<tr>
+<td style="text-align:left;box-shadow: 0px 1.5px">
+</td>
+<td style="text-align:center;box-shadow: 0px 1.5px">
+p = &lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Num.Obs.
+</td>
+<td style="text-align:center;">
+34126
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2
+</td>
+<td style="text-align:center;">
+0.012
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2 Adj.
+</td>
+<td style="text-align:center;">
+0.012
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'>modelsummary</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/modelsummary/man/modelsummary.html'>modelsummary</a></span><span class='op'>(</span><span class='va'>clinic_vs_med_reg</span>,</span>
+<span>                           statistic <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"s.e. = {std.error}"</span>,</span>
+<span>                                         <span class='st'>"p = {p.value}"</span><span class='op'>)</span>,</span>
+<span>                           gof_map <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"nobs"</span>, <span class='st'>"r.squared"</span>, <span class='st'>"adj.r.squared"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+ (1)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:center;">
+1.169
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+s.e. = 0.011
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+p = &lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EA_FAC_D
+</td>
+<td style="text-align:center;">
+−0.192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+s.e. = 0.014
+</td>
+</tr>
+<tr>
+<td style="text-align:left;box-shadow: 0px 1.5px">
+</td>
+<td style="text-align:center;box-shadow: 0px 1.5px">
+p = &lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Num.Obs.
+</td>
+<td style="text-align:center;">
+34126
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2
+</td>
+<td style="text-align:center;">
+0.006
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2 Adj.
+</td>
+<td style="text-align:center;">
+0.006
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For the regression that assesses the effect of having transport within walking distance on the tendency of going without medical treatment, the intercept is 1.349, which means that when there is no transport nearby, the average tendency of going without medical treatment is 1.349, on average. The coefficient for the transport variable is -0.356, which means that when there is transport nearby, the average tendency of going without medical treatment decreases by 0.356, on average. This coefficient has a p-value that is less than 0.001, which indicates that these results are statistically significant under alpha = 0.05. However, this is a cross-sectional study, as these are just results taken from a dataset of a survey taken in 2016, so it cannot be interpreted causally.</p>
+<p>For the regression that assesses the effect of having a health clinic within walking distance on the tendency of going without medical treatment, the intercept is 1.169, which means that when there is no health clinic or hospital nearby, the average tendency of going without medical treatment is 1.169, on average. The coefficient for the clinic variable is -0.192, which means that when there is a health clinic nearby, the average tendency of going without medical treatment decreases by 0.192, on average. This coefficient has a p-value that is less than 0.001, which indicates that these results are statistically significant under alpha = 0.05. However, this is a cross-sectional study, as these are just results taken from a dataset of a survey taken in 2016, so it cannot be interpreted causally.</p>
+<h2 id="multiple-regression-with-confounding-variables-and-main-variables">Multiple Regression with Confounding Variables and Main Variables</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>confound_transport_vs_med_reg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>Q8C</span> <span class='op'>~</span> <span class='va'>EA_FAC_G</span> <span class='op'>+</span> <span class='va'>EA_FAC_D</span> <span class='op'>+</span> <span class='va'>Q8E</span> <span class='op'>+</span> <span class='va'>Q95</span>, data <span class='op'>=</span> <span class='va'>afro_baro</span><span class='op'>)</span></span>
+<span><span class='fu'>modelsummary</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/modelsummary/man/modelsummary.html'>modelsummary</a></span><span class='op'>(</span><span class='va'>confound_transport_vs_med_reg</span>,</span>
+<span>                           statistic <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"s.e. = {std.error}"</span>,</span>
+<span>                                         <span class='st'>"p = {p.value}"</span><span class='op'>)</span>,</span>
+<span>                           gof_map <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"nobs"</span>, <span class='st'>"r.squared"</span>, <span class='st'>"adj.r.squared"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+ (1)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:center;">
+0.355
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+s.e. = 0.019
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+p = &lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EA_FAC_G
+</td>
+<td style="text-align:center;">
+−0.083
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+s.e. = 0.016
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+p = &lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EA_FAC_D
+</td>
+<td style="text-align:center;">
+−0.067
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+s.e. = 0.012
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+p = &lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Q8E
+</td>
+<td style="text-align:center;">
+0.435
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+s.e. = 0.004
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+p = &lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Q95
+</td>
+<td style="text-align:center;">
+−0.013
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+s.e. = 0.005
+</td>
+</tr>
+<tr>
+<td style="text-align:left;box-shadow: 0px 1.5px">
+</td>
+<td style="text-align:center;box-shadow: 0px 1.5px">
+p = 0.007
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Num.Obs.
+</td>
+<td style="text-align:center;">
+34126
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2
+</td>
+<td style="text-align:center;">
+0.254
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2 Adj.
+</td>
+<td style="text-align:center;">
+0.254
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For this regression, the intercept is 0.355, which means that when all the variables are 0 (in this context, this means there is no transport nearby, there is no health clinic nearby, someone has always had a cash income, and someone does not have a job and is not looking for one), the average tendency of going without medical treatment is 0.355, on average. The coefficient for the transport variable is -0.083, which means that when there is transport nearby, the average tendency of going without medical treatment decreases by 0.083, on average, holding all other variables constant. The coefficient for the clinic variable is -0.067, which means that when there is a clinic nearby, the average tendency of going without medical treatment decreases by 0.067, on average, holding all other variables constant. The coefficient for the income variable is 0.435, which means that the average tendency of going without medical treatment increases by 0.435 when you have more people that do not have an income, on average, holding all other variables constant. The coefficient for the having a job variable is -0.013, which means that the average tendency of going without medical treatment decreases by 0.013 when someone has a job and it is full-time or part-time, on average, holding all variables constant. All coefficients have a p-value that is less than 0.001 except the one about having a job, which has a p-value of 0.007 which indicates that these results are statistically significant under alpha = 0.05. However, this is a cross-sectional study, as these are just results taken from a dataset of a survey taken in 2016, so it cannot be interpreted causally.</p>
+<h2 id="summary-results-no-medical-treatment-vs.-no-clinic">Summary Results: No Medical Treatment vs. No Clinic</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>afro_baro</span> <span class='op'>|&gt;</span> </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_health_clinic</span>, fill <span class='op'>=</span> <span class='va'>no_med_treatment</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_bar</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span> <span class='op'>+</span> </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Tendency of Going Without Medical Treatment Based on Whether There is a Health Clinic"</span>, x <span class='op'>=</span> <span class='st'>"Is there a health clinic?"</span>, y <span class='op'>=</span> <span class='st'>"Count"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>plot.title <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-11-1.png" width="624" /></p>
+</div>
+<p>Even though the majority of respondents in areas that do not have a health clinic nearby have never gone without medical treatment, the number of respondents that never go without medical treatment drastically increases in areas that do have health clinics within walking distance.</p>
+<h2 id="summary-results-no-medical-treatment-vs.-transport">Summary Results: No Medical Treatment vs. Transport</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>afro_baro</span> <span class='op'>|&gt;</span> </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>is_transport</span>, fill <span class='op'>=</span> <span class='va'>no_med_treatment</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_bar.html'>geom_bar</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='st'>"dodge"</span><span class='op'>)</span> <span class='op'>+</span> </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Tendency of Going Without Medical Treatment Based on Whether There is Transport"</span>, x <span class='op'>=</span> <span class='st'>"Is there transport?"</span>, y <span class='op'>=</span> <span class='st'>"Count"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>plot.title <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-12-1.png" width="624" /></p>
+</div>
+<p>Although the majority of people in areas without transport within walking distance never go without medical treatment, the number of respondents that never go without medical treatment drastically increases when there is transport within walking distance.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>There does appear to be a relationship between transport and going without medical treatment, in that having transport nearby is associated with a decrease in going without medical treatment. There also appears to be a relationship between having a clinic and going without medical treatment, in that having a health clinic nearby is associated with a decrease in going without medical treatment. Due to the coefficients in each regression not being 0, with a p-value of less than 0.05 for both, we can reject the null hypothesis that there is no relationship between having health clinics within walking distance and going without medical treatment, and we can reject the null hypothesis that there is no relationship between having transport within waling distance and going without medical treatment. There appears to be a greater effect of having transport nearby on going without medical treatment than having a clinic nearby, in that having transport nearby appears to decrease the tendency of going without medical treatment more than having a health clinic nearby. Within what I have analyzed, there are quite a few limitations, in that I did not analyze which regions or countries tend to have more respondents that are in areas that lack transport or health clinics nearby. It would also be helpful if I merged data that spans multiple years to see if a change in having transport or healthcare clinics nearby changes the tendency of going without medical treatment.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
